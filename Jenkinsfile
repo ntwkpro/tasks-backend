@@ -42,5 +42,14 @@ pipeline {
                 }
             }
         }
+        stage ('Deploy Frontend') {
+            steps {
+                dir ('frontend') {
+                    git branch: '**', credentialsId: 'github_login', url: 'https://github.com/ntwkpro/tasks-frontend'
+                    bat 'mvn clean package'
+                    deploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks', war: 'target\\tasks.war'
+                }
+            }
+        }    
     }
 }
