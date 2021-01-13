@@ -50,6 +50,14 @@ pipeline {
                     deploy adapters: [tomcat8(credentialsId: 'tomcat_login', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks', war: 'target\\tasks.war'
                 }
             }
-        }    
+        }
+        stage ('Functional Test') {
+            steps {
+                dir('functional-test') {
+                    git branch: '**', credentialsId: 'github_login', url: 'https://github.com/ntwkpro/tasks-functional-tests'
+                    bat 'mvn test'
+                }
+            }
+        }
     }
 }
